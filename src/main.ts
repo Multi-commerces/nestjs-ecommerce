@@ -19,9 +19,7 @@ async function bootstrap() {
       dismissDefaultMessages: false,
       forbidNonWhitelisted: true,
 
-      // Ne pas ignorerer la validation de toutes les propriétés nulles ou non définies dans l'objet de validation.
-      skipMissingProperties: false,
-      // Ne pas ignorer la validation de toutes les propriétés non définies dans l'objet de validation.
+      // Ignorer la validation de toutes les propriétés non définies dans l'objet de validation.
       skipUndefinedProperties: false,
       // Ne pas ignorer la validation de toutes les propriétés nulles dans l'objet de validation.
       skipNullProperties: false,
