@@ -1,0 +1,14 @@
+version : '3.8' # spécifiez la version de docker-compose
+# Définir les services/conteneurs à exécuter 
+services : 
+        
+  mongodb : 
+    image : mongo 
+    volumes : 
+      - mongodata:/data/db 
+    ports : 
+      - "27017:27017" 
+    networks : - volumes 
+      backend    :   mongodata :  
+réseaux : 
+  back-end :
