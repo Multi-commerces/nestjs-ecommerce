@@ -2,8 +2,8 @@ import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { CategoriesModule } from './modules/categories/categories.module';
 import { ProductsModule } from './modules/products/products.module';
-import { OrdersModule } from './orders/orders.module';
-import { DeliveriesModule } from './deliveries/deliveries.module';
+import { OrdersModule } from './modules/orders/orders.module';
+import { DeliveriesModule } from './modules/deliveries/deliveries.module';
 
 @Module({
   imports: [

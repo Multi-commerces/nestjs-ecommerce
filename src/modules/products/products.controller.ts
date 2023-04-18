@@ -1,20 +1,25 @@
 import {
-  Controller,
   Body,
-  Param,
+  Controller,
   Get,
-  Post,
-  Patch,
   HttpCode,
+  Param,
+  Patch,
+  Post,
 } from '@nestjs/common';
-import { ProductsService } from './products.service';
-import { ApiExtraModels, ApiTags } from '@nestjs/swagger';
 import {
+  ApiExtraModels,
+  ApiOkResponse,
+  ApiTags,
+  getSchemaPath,
+} from '@nestjs/swagger';
+import { CollectionHATEOS, DocumentHATEOS } from 'src/app.responses.hal';
+import {
+  ProductMergeData,
   ProductReadData,
   ProductSaveData,
-  ProductMergeData,
 } from './data/product-data';
-import { ProductLang } from './data/product.schema';
+import { ProductsService } from './products.service';
 
 @ApiTags('products')
 @Controller('products')
@@ -22,32 +27,49 @@ import { ProductLang } from './data/product.schema';
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
+  @ApiOkResponse({
+    schema: {
+      allOf: [
+        { $ref: getSchemaPath(CollectionHATEOS) },
+        {
+          properties: {
+            data: {
+              type: 'array',
+              items: { $ref: getSchemaPath(ProductReadData) },
+            },
+          },
+        },
+      ],
+    },
+  })
   @Get()
-  async findAll(): Promise<ProductReadData[]> {
-    return this.productsService.findAll();
-  }
+  async findAll(): Promise<CollectionHATEOS<ProductReadData>> {
+    const produtcs = await this.productsService.findAll();
 
-  @Get('/:id/langs')
-  async findProductLanguages(): Promise<ProductLang[]> {
-    return this.productsService.findLangs();
+    return CollectionHATEOS.create(produtcs);
   }
 
   @Post()
   @HttpCode(201) // retourne le code HTTP 201 au lieu de 200 par défaut
-  create(@Body() product: ProductSaveData): Promise<ProductReadData> {
-    return this.productsService.create(product);
+  async create(
+    @Body() product: ProductSaveData,
+  ): Promise<DocumentHATEOS<ProductReadData>> {
+    const data = await this.productsService.create(product);
+    return DocumentHATEOS.create(data);
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string): Promise<ProductReadData> {
-    return this.productsService.findOne(id);
+  async findOne(
+    @Param('id') id: string,
+  ): Promise<DocumentHATEOS<ProductReadData>> {
+    return DocumentHATEOS.create(await this.productsService.findOne(id));
   }
 
   @Patch(':id')
   async patch(
     @Param('id') id: string,
     @Body() product: ProductMergeData,
-  ): Promise<ProductReadData> {
-    return this.productsService.merge(id, product);
+  ): Promise<DocumentHATEOS<ProductReadData>> {
+    return DocumentHATEOS.create(await this.productsService.merge(id, product));
   }
 }

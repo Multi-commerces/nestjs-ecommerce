@@ -32,15 +32,15 @@ export class ProductMapper {
     data.image = schema.image;
 
     // Personnalisation de la réponse en fonction des besoins de l'application.
-    if (options) {
+    if (!options) {
       // Si l'option withTranslations est activée, les traductions du produit seront incluses.
-      if (options.withTranslations) {
+      if (!options || options.withTranslations) {
         data._embedded = {
           'product-translations': data['product-translations'] ?? [],
         };
       }
       // Si l'option withRelationships est activée, les relations du produit seront incluses.
-      if (options.withRelationships) {
+      if (options && options.withRelationships) {
         {
           data._embedded = {
             'product-relationships': data['product-relationships'] ?? [],

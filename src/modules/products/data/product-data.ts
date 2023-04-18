@@ -1,18 +1,9 @@
 import { ApiProperty, ApiPropertyOptional, PartialType } from '@nestjs/swagger';
 import { IsNumber, IsOptional, IsString } from 'class-validator';
 import { ProductAvailability, ProductRating } from './product.schema';
-import { IsOptionalNotEmpty } from '../../../validators/validators';
 
 interface HasId {
   _id: string;
-}
-
-export class DocumentHAL<T> {
-  _links: Record<string, { href: string }>;
-
-  _relationships;
-
-  _embeded: Record<string, [T]>;
 }
 
 export class ProductAttributes {
