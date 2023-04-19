@@ -11,7 +11,7 @@ import {
   ProductReadData,
   ProductSaveData,
   ProductMergeData,
-} from './data/product-data';
+} from './data/product.data';
 import { ProductMapper } from './data/product.mapper';
 
 @Injectable()

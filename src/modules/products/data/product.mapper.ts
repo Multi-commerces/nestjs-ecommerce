@@ -3,7 +3,7 @@ import {
   ProductReadData,
   ProductSaveData,
   ProductMergeData,
-} from './product-data';
+} from './product.data';
 
 export class ProductWithOptions {
   withTranslations?: boolean;

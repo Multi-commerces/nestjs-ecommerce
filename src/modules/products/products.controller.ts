@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  UseInterceptors,
 } from '@nestjs/common';
 import {
   ApiExtraModels,
@@ -14,11 +15,12 @@ import {
   getSchemaPath,
 } from '@nestjs/swagger';
 import { CollectionHATEOS, DocumentHATEOS } from 'src/app.responses.hal';
+import { TransformInterceptor } from 'src/common/interceptor.controller';
 import {
   ProductMergeData,
   ProductReadData,
   ProductSaveData,
-} from './data/product-data';
+} from './data/product.data';
 import { ProductsService } from './products.service';
 
 @ApiTags('products')
@@ -42,30 +44,28 @@ export class ProductsController {
       ],
     },
   })
+  @UseInterceptors(TransformInterceptor)
   @Get()
-  async findAll(): Promise<CollectionHATEOS<ProductReadData>> {
-    const produtcs = await this.productsService.findAll();
-
-    return CollectionHATEOS.create(produtcs);
+  async findAll(): Promise<ProductReadData[]> {
+    return await this.productsService.findAll();
   }
 
   @Post()
   @HttpCode(201) // retourne le code HTTP 201 au lieu de 200 par défaut
-  async create(
-    @Body() product: ProductSaveData,
-  ): Promise<DocumentHATEOS<ProductReadData>> {
-    const data = await this.productsService.create(product);
-    return DocumentHATEOS.create(data);
+  @UseInterceptors(TransformInterceptor)
+  async create(@Body() product: ProductSaveData): Promise<ProductReadData> {
+    return await this.productsService.create(product);
   }
 
   @Get(':id')
-  async findOne(
-    @Param('id') id: string,
-  ): Promise<DocumentHATEOS<ProductReadData>> {
-    return DocumentHATEOS.create(await this.productsService.findOne(id));
+  @HttpCode(200)
+  @UseInterceptors(TransformInterceptor)
+  async findOne(@Param('id') id: string): Promise<ProductReadData> {
+    return await this.productsService.findOne(id);
   }
 
   @Patch(':id')
+  @HttpCode(200)
   async patch(
     @Param('id') id: string,
     @Body() product: ProductMergeData,
