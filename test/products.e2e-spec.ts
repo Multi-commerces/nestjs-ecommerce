@@ -33,8 +33,8 @@ describe('AppController (e2e)', () => {
         .expect(201);
 
       createdProduct = response.body;
-      expect(createdProduct.price).toEqual(product.price);
-      expect(createdProduct.reference).toEqual(product.reference);
+      expect(createdProduct._data.price).toEqual(product.price);
+      expect(createdProduct._data.reference).toEqual(product.reference);
     });
 
     it('PATCH /products/:id', async () => {
@@ -42,13 +42,13 @@ describe('AppController (e2e)', () => {
         price: 32,
       };
       const response = await request(app.getHttpServer())
-        .patch(`/products/${createdProduct._id}`)
+        .patch(`/products/${createdProduct._data._id}`)
         .send(updatedProduct)
         .expect(200);
 
       const body = response.body;
-      expect(body.price).toEqual(updatedProduct.price);
-      expect(body.reference).toEqual(createdProduct.reference);
+      expect(body._data.price).toEqual(updatedProduct.price);
+      expect(body._data.reference).toEqual(createdProduct._data.reference);
     });
   });
 });

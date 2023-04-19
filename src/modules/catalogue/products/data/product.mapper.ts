@@ -20,10 +20,7 @@ export class ProductMapper {
     return document;
   }
 
-  static toData(
-    schema: ProductDocument,
-    options?: ProductWithOptions,
-  ): ProductReadData {
+  static toData(schema: ProductDocument): ProductReadData {
     // Copie les propriétés dans la nouvelle instance
     const data = new ProductReadData();
     data._id = schema._id;
@@ -32,22 +29,12 @@ export class ProductMapper {
     data.image = schema.image;
 
     // Personnalisation de la réponse en fonction des besoins de l'application.
-    if (!options) {
+    data._embedded = {
       // Si l'option withTranslations est activée, les traductions du produit seront incluses.
-      if (!options || options.withTranslations) {
-        data._embedded = {
-          'product-translations': data['product-translations'] ?? [],
-        };
-      }
+      'product-translations': schema['product-translations'],
       // Si l'option withRelationships est activée, les relations du produit seront incluses.
-      if (options && options.withRelationships) {
-        {
-          data._embedded = {
-            'product-relationships': data['product-relationships'] ?? [],
-          };
-        }
-      }
-    }
+      'product-relationships': schema['product-relationships'] ?? [],
+    };
 
     return data;
   }

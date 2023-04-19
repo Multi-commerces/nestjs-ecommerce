@@ -7,7 +7,7 @@ import {
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Response } from 'express';
-import { CollectionHATEOS, DocumentHATEOS } from 'src/app.responses.hal';
+import { CollectionHATEOS, DocumentHATEOS } from '../app.responses.hal';
 
 @Injectable()
 export class TransformInterceptor<T>

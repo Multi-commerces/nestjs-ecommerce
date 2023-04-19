@@ -15,7 +15,7 @@ import {
   ApiTags,
   getSchemaPath,
 } from '@nestjs/swagger';
-import { TransformInterceptor } from 'src/common/interceptor.controller';
+import { TransformInterceptor } from '../../../common/interceptor.controller';
 import {
   ProductMergeData,
   ProductReadData,
@@ -26,6 +26,7 @@ import { ProductsService } from './products.service';
 @ApiTags('[Catalogue] Gestion du catalogue des produits')
 @Controller('products')
 @ApiExtraModels(ProductReadData, ProductSaveData, ProductMergeData)
+@UseInterceptors(TransformInterceptor)
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
@@ -48,7 +49,6 @@ export class ProductsController {
       },
     },
   })
-  @UseInterceptors(TransformInterceptor)
   @Get()
   async findAll(): Promise<ProductReadData[]> {
     return await this.productsService.findAll();
@@ -66,7 +66,6 @@ export class ProductsController {
   })
   @Post()
   @HttpCode(201) // retourne le code HTTP 201 au lieu de 200 par défaut
-  @UseInterceptors(TransformInterceptor)
   async create(@Body() product: ProductSaveData): Promise<ProductReadData> {
     return await this.productsService.create(product);
   }
@@ -83,7 +82,6 @@ export class ProductsController {
   })
   @Get(':id')
   @HttpCode(200)
-  @UseInterceptors(TransformInterceptor)
   async findOne(@Param('id') id: string): Promise<ProductReadData> {
     return await this.productsService.findOne(id);
   }

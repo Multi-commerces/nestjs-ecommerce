@@ -29,13 +29,10 @@ export class ProductsService {
       .find()
       .populate('product-translations')
       .exec();
-    return documents.map((doc) => ProductMapper.toData(doc.toObject()));
-  }
 
-  async findLangs(): Promise<ProductLang[]> {
-    const data = await this.productLangModel.find().exec();
+    console.debug(documents);
 
-    return data;
+    return documents.map((doc) => ProductMapper.toData(doc));
   }
 
   async findOne(_id: string): Promise<ProductReadData> {
@@ -51,37 +48,43 @@ export class ProductsService {
   }
 
   async create(product: ProductSaveData): Promise<ProductReadData> {
-    const document = ProductMapper.toSchema(product);
-    const newProduct = new this.productModel(document);
+    const schema = ProductMapper.toSchema(product);
 
-    const savedProduct = await newProduct.save();
-    console.log('savedProduct : ' + JSON.stringify(savedProduct));
+    // création du produit
+    const savedProduct = await new this.productModel(schema).save();
+
+    // Création des traductions
     const langs = [
       {
-        productId: savedProduct._id,
         languageCode: 'fr',
         key: 'Titre',
         name: 'Nouveau produit (fr)',
         description: 'Nouveau produit (fr)',
+        meta_title: 'meta_title',
+        meta_description: 'meta_description',
+        meta_keywords: '',
       },
       {
-        productId: savedProduct._id,
         languageCode: 'en',
         key: 'Title',
         name: 'Nouveau produit (en)',
         description: 'New product (en)',
+        meta_title: 'meta_title',
+        meta_description: 'meta_description',
+        meta_keywords: '',
       },
     ];
-    console.log('newLangs : ' + JSON.stringify(langs));
 
-    // Ajouter les éléments au fur et à mesure de leur création
-    for (const lang of langs) {
-      const savedLang = await this.productLangModel.create(lang);
-      if (!savedProduct['translated-products'])
-        savedProduct['translated-products'] = [];
+    const savedLangs = await Promise.all(
+      langs.map((lang) =>
+        new this.productLangModel({
+          ...lang,
+          product: savedProduct._id,
+        }).save(),
+      ),
+    );
 
-      savedProduct['translated-products'].push(savedLang._id);
-    }
+    savedProduct['product-translations'] = savedLangs.map((lang) => lang._id);
     await savedProduct.save();
 
     return ProductMapper.toData(savedProduct);

@@ -40,13 +40,10 @@ export class Product {
   @Prop()
   rating: ProductRating;
 
-  @Prop()
-  'product-translations': [
-    {
-      type: Types.ObjectId;
-      ref: 'ProductLang';
-    },
-  ];
+  @Prop({
+    type: [{ type: Types.ObjectId, ref: 'ProductLang' }],
+  })
+  'product-translations': ProductLang[];
 
   @Prop()
   'product-variations': [
@@ -69,35 +66,33 @@ export const ProductSchema = SchemaFactory.createForClass(Product);
 export type ProductLangDocument = ProductLang & Document;
 @Schema()
 export class ProductLang {
-  product: {
-    type: Types.ObjectId;
-    ref: 'Product';
-  };
+  @Prop({ type: Types.ObjectId, ref: 'Product' })
+  product: Product;
 
   @Prop()
-  languageCode: String;
+  languageCode: string;
 
   @Prop()
-  key: String;
+  key: string;
 
   @Prop()
-  name: String;
+  name: string;
 
   @Prop()
-  description: String;
+  description: string;
 
   @Prop()
-  meta_title: String;
+  meta_title: string;
 
   @Prop()
-  meta_description: String;
+  meta_description: string;
 
   @Prop()
-  meta_keywords: String;
+  meta_keywords: string;
 }
 
 export const ProductLangSchema = SchemaFactory.createForClass(ProductLang);
-// ProductLangSchema.index({ productId: 1, languageCode: 1 }, { unique: true });
+// ProductLangSchema.index({ product: 1, languageCode: 1 }, { unique: true });
 
 export type TagTranslationDocument = TagTranslation & Document;
 
