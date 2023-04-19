@@ -1,9 +1,11 @@
-import { Controller, Get, Post } from '@nestjs/common';
+import { Controller, Get, Post, UseInterceptors } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { TransformInterceptor } from 'src/common/interceptor.controller';
 import { ProductTranslationsService } from './product-translations.service';
 
 @ApiTags('[International] Gestion des traductions de produits')
 @Controller('product-translations')
+@UseInterceptors(TransformInterceptor)
 export class ProductTranslationsController {
   constructor(private readonly productsService: ProductTranslationsService) {}
 

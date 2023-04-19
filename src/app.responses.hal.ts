@@ -21,6 +21,15 @@ export class DocumentHATEOS<T> {
     this._data = data;
   }
 
+  addLink(rel: string, href: string) {
+    if (!this._links) {
+      this._links = {};
+    }
+    this._links[rel] = { href };
+
+    return this;
+  }
+
   static create<T>(data: T): DocumentHATEOS<T> {
     return new DocumentHATEOS<T>(data);
   }
@@ -71,6 +80,14 @@ export class CollectionHATEOS<T> {
     this.total = data.length;
 
     this._links = links || {};
+  }
+
+  addLink(rel: string, href: string): CollectionHATEOS<T> {
+    if (!this._links) {
+      this._links = {};
+    }
+    this._links[rel] = { href };
+    return this;
   }
 
   static create<T>(
