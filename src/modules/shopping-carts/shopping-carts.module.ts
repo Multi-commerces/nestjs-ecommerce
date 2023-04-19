@@ -4,6 +4,6 @@ import { ShoppingCartsService } from './shopping-carts.service';
 
 @Module({
   controllers: [ShoppingCartsController],
-  providers: [ShoppingCartsService]
+  providers: [ShoppingCartsService],
 })
 export class ShoppingCartsModule {}

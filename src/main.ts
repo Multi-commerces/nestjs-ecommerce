@@ -28,8 +28,10 @@ async function bootstrap() {
 
   /** Configuration swagger */
   const config = new DocumentBuilder()
-    .setTitle('My API')
-    .setDescription('Description of my API')
+    .setTitle('RestFul API e-commerce')
+    .setDescription(
+      'API permettant de manipuler la boutique et découvrir les données de celle-ci.',
+    )
     .setVersion('1.0')
     .build();
   const document = SwaggerModule.createDocument(app, config);

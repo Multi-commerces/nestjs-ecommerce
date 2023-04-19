@@ -5,7 +5,8 @@ import { ProductsModule } from './modules/catalogue/products/products.module';
 import { OrdersModule } from './modules/orders/orders.module';
 import { DeliveriesModule } from './modules/deliveries/deliveries.module';
 import { InvoicesModule } from './modules/orders/invoices/invoices.module';
-import { ShoppingCartsModule } from './shopping-carts/shopping-carts.module';
+import { ShoppingCartsModule } from './modules/shopping-carts/shopping-carts.module';
+import { ProductTranslationsModule } from './modules/catalogue/products/product-translations/product-translations.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { ShoppingCartsModule } from './shopping-carts/shopping-carts.module';
       }/${process.env.MONGODB_DATABASE || 'ecommerceDB'}`,
     ),
     ProductsModule,
+    ProductTranslationsModule,
     CategoriesModule,
     OrdersModule,
     DeliveriesModule,

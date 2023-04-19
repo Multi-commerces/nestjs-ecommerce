@@ -11,10 +11,10 @@ import {
 import {
   ApiExtraModels,
   ApiOkResponse,
+  ApiOperation,
   ApiTags,
   getSchemaPath,
 } from '@nestjs/swagger';
-import { CollectionHATEOS, DocumentHATEOS } from 'src/app.responses.hal';
 import { TransformInterceptor } from 'src/common/interceptor.controller';
 import {
   ProductMergeData,
@@ -23,25 +23,29 @@ import {
 } from './data/product.data';
 import { ProductsService } from './products.service';
 
-@ApiTags('products')
+@ApiTags('[Catalogue] Gestion du catalogue des produits')
 @Controller('products')
 @ApiExtraModels(ProductReadData, ProductSaveData, ProductMergeData)
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
+  schemaProduct = {
+    properties: {
+      _data: {
+        $ref: getSchemaPath(ProductReadData),
+      },
+    },
+  };
+
+  @ApiOperation({ summary: 'Récupérer les produits' })
   @ApiOkResponse({
     schema: {
-      allOf: [
-        { $ref: getSchemaPath(CollectionHATEOS) },
-        {
-          properties: {
-            data: {
-              type: 'array',
-              items: { $ref: getSchemaPath(ProductReadData) },
-            },
-          },
+      properties: {
+        _data: {
+          type: 'array',
+          items: { $ref: getSchemaPath(ProductReadData) },
         },
-      ],
+      },
     },
   })
   @UseInterceptors(TransformInterceptor)
@@ -50,6 +54,16 @@ export class ProductsController {
     return await this.productsService.findAll();
   }
 
+  @ApiOperation({ summary: 'Créer un nouveau produit' })
+  @ApiOkResponse({
+    schema: {
+      properties: {
+        _data: {
+          $ref: getSchemaPath(ProductReadData),
+        },
+      },
+    },
+  })
   @Post()
   @HttpCode(201) // retourne le code HTTP 201 au lieu de 200 par défaut
   @UseInterceptors(TransformInterceptor)
@@ -57,6 +71,16 @@ export class ProductsController {
     return await this.productsService.create(product);
   }
 
+  @ApiOperation({ summary: 'Récupérer un produit de la liste' })
+  @ApiOkResponse({
+    schema: {
+      properties: {
+        _data: {
+          $ref: getSchemaPath(ProductReadData),
+        },
+      },
+    },
+  })
   @Get(':id')
   @HttpCode(200)
   @UseInterceptors(TransformInterceptor)
@@ -64,12 +88,22 @@ export class ProductsController {
     return await this.productsService.findOne(id);
   }
 
+  @ApiOperation({ summary: 'Mise à jour partielle du produit' })
+  @ApiOkResponse({
+    schema: {
+      properties: {
+        _data: {
+          $ref: getSchemaPath(ProductReadData),
+        },
+      },
+    },
+  })
   @Patch(':id')
   @HttpCode(200)
   async patch(
     @Param('id') id: string,
     @Body() product: ProductMergeData,
-  ): Promise<DocumentHATEOS<ProductReadData>> {
-    return DocumentHATEOS.create(await this.productsService.merge(id, product));
+  ): Promise<ProductReadData> {
+    return await this.productsService.merge(id, product);
   }
 }
