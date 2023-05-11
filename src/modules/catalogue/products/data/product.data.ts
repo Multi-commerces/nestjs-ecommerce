@@ -7,6 +7,13 @@ interface HasId {
 }
 
 export class ProductAttributes {
+  type: string;
+
+  // Getter pour la propriété 'type'
+  static get type(): string {
+    return 'product';
+  }
+
   @ApiProperty({
     type: Number,
     description: 'Prix du produit',
@@ -23,9 +30,22 @@ export class ProductAttributes {
 
   @ApiProperty({
     type: String,
+    description: 'Nom du produit du produit',
+  })
+  @IsString()
+  name: string;
+
+  @ApiProperty({
+    type: String,
+    description: 'Description du produit',
+  })
+  @IsString()
+  description: string;
+
+  @ApiProperty({
+    type: String,
     description: 'Image du produit',
   })
-  @IsOptional()
   @IsString()
   image: string;
 

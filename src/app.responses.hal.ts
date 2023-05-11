@@ -9,23 +9,23 @@ export class DocumentHATEOS<T> {
     readOnly: true,
     description: 'Un objet qui contient des liens vers des ressources connexes',
   })
-  _links: Record<string, { href: string }>;
+  links: Record<string, { href: string }>;
 
   @ApiProperty({
     readOnly: true,
     description: 'Un objet qui contient les données de la ressource.',
   })
-  _data: T;
+  data: T;
 
   constructor(data: T) {
-    this._data = data;
+    this.data = data;
   }
 
   addLink(rel: string, href: string) {
-    if (!this._links) {
-      this._links = {};
+    if (!this.links) {
+      this.links = {};
     }
-    this._links[rel] = { href };
+    this.links[rel] = { href };
 
     return this;
   }
@@ -65,28 +65,28 @@ export class CollectionHATEOS<T> {
     readOnly: true,
     description: 'Un objet qui contient des liens vers des ressources connexes',
   })
-  _links: Record<string, { href: string }>;
+  links: Record<string, { href: string }>;
 
   @ApiProperty({
     readOnly: true,
     description: 'Un objet qui contient les données de la collection.',
   })
-  _data: T[];
+  data: T[];
 
   constructor(data: T[], links?: Record<string, { href: string }>) {
-    this._data = data;
+    this.data = data;
     this.page = 1;
     this.limit = data.length;
     this.total = data.length;
 
-    this._links = links || {};
+    this.links = links || {};
   }
 
   addLink(rel: string, href: string): CollectionHATEOS<T> {
-    if (!this._links) {
-      this._links = {};
+    if (!this.links) {
+      this.links = {};
     }
-    this._links[rel] = { href };
+    this.links[rel] = { href };
     return this;
   }
 

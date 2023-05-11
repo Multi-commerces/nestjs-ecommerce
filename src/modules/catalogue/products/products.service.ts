@@ -27,7 +27,7 @@ export class ProductsService {
   async findAll(): Promise<ProductReadData[]> {
     const documents = await this.productModel
       .find()
-      .populate('product-translations')
+      // .populate('product-translations')
       .exec();
 
     console.debug(documents);
@@ -36,7 +36,10 @@ export class ProductsService {
   }
 
   async findOne(_id: string): Promise<ProductReadData> {
-    const product = await this.productModel.findById(_id).exec();
+    const product = await this.productModel
+      .findById(_id)
+      .populate('product-translations')
+      .exec();
     if (!product) {
       throw new NotFoundException({
         objectOrError: `Product ${_id} not found ${product}`,
@@ -87,7 +90,7 @@ export class ProductsService {
     savedProduct['product-translations'] = savedLangs.map((lang) => lang._id);
     await savedProduct.save();
 
-    return ProductMapper.toData(savedProduct);
+    return this.findOne(savedProduct._id);
   }
 
   async merge(id: string, product: ProductMergeData): Promise<ProductReadData> {

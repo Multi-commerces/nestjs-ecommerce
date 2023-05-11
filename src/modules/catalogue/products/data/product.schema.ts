@@ -32,6 +32,9 @@ export class Product {
   price: number;
 
   @Prop()
+  name: string;
+
+  @Prop()
   image: string;
 
   @Prop()
