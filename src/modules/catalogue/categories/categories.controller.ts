@@ -6,8 +6,8 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 export class CategoriesController {
   @ApiOperation({ summary: 'Récupérer toutes les catégories' })
   @Get()
-  async findAll(): Promise<any[]> {
-    return [];
+  async findAll(): Promise<any> {
+    return { data: [] };
   }
 
   @ApiOperation({ summary: 'Céer une nouvelle catégorie' })

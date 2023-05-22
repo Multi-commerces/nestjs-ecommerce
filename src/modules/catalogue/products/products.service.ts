@@ -27,7 +27,7 @@ export class ProductsService {
   async findAll(): Promise<ProductReadData[]> {
     const documents = await this.productModel
       .find()
-      // .populate('product-translations')
+      .populate('product-translations')
       .exec();
 
     console.debug(documents);
@@ -61,17 +61,8 @@ export class ProductsService {
       {
         languageCode: 'fr',
         key: 'Titre',
-        name: 'Nouveau produit (fr)',
-        description: 'Nouveau produit (fr)',
-        meta_title: 'meta_title',
-        meta_description: 'meta_description',
-        meta_keywords: '',
-      },
-      {
-        languageCode: 'en',
-        key: 'Title',
-        name: 'Nouveau produit (en)',
-        description: 'New product (en)',
+        name: product.name ?? 'Nouveau produit (fr)',
+        description: product.description ?? 'Nouveau produit (fr)',
         meta_title: 'meta_title',
         meta_description: 'meta_description',
         meta_keywords: '',

@@ -25,6 +25,7 @@ export class ProductMapper {
     const data = new ProductReadData();
     data._id = schema._id;
     data.reference = schema.reference;
+
     data.price = schema.price;
     data.image = schema.image;
 
